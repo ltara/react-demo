@@ -11,11 +11,12 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
+  renderSquare(coord) {
+    const i = 3 * coord[0] + coord[1] - 4
     return (
       <Square
         value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
+        onClick={() => this.props.onClick(coord)}
       />
     )
   }
@@ -24,19 +25,19 @@ class Board extends React.Component {
     return (
       <div>
         <div className='board-row'>
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+          {this.renderSquare([1,1])}
+          {this.renderSquare([1,2])}
+          {this.renderSquare([1,3])}
         </div>
         <div className='board-row'>
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
+          {this.renderSquare([2,1])}
+          {this.renderSquare([2,2])}
+          {this.renderSquare([2,3])}
         </div>
         <div className='board-row'>
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
+          {this.renderSquare([3,1])}
+          {this.renderSquare([3,2])}
+          {this.renderSquare([3,3])}
         </div>
       </div>
     )
@@ -50,6 +51,7 @@ class Game extends React.Component {
       history: [
         {
           squares: Array(9).fill(null),
+          lastStepCoord: [null, null]
         },
       ],
       stepNumber: 0,
@@ -57,7 +59,8 @@ class Game extends React.Component {
     }
   }
 
-  handleClick(i) {
+  handleClick(coord) {
+    const i = 3 * coord[0] + coord[1] - 4
     const history = this.state.history.slice(0, this.state.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
@@ -69,6 +72,7 @@ class Game extends React.Component {
       history: history.concat([
         {
           squares: squares,
+          lastStepCoord: coord
         },
       ]),
       stepNumber: history.length,
@@ -93,6 +97,7 @@ class Game extends React.Component {
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <span style={{marginLeft: 10 + 'px'}}>{ `(${ step.lastStepCoord[0] }, ${ step.lastStepCoord[1]} )` }</span>
         </li>
       )
     })
