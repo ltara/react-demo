@@ -1,13 +1,20 @@
+import { render } from '@testing-library/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 
-function Square(props) {
-  return (
-    <button className='square' onClick={props.onClick}>
-      {props.value}
-    </button>
-  )
+class Square extends React.Component {
+  render() {
+    return (
+      <button
+        className='square'
+        onClick={ this.props.onClick }
+        style={{ color: this.props.winnerSquare ? '#F00' : '' }}
+      >
+        { this.props.value }
+      </button>
+    )
+  }
 }
 
 class Board extends React.Component {
@@ -18,6 +25,7 @@ class Board extends React.Component {
         key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(coord)}
+        winnerSquare={ this.props.winnerSquares && this.props.winnerSquares.findIndex((item) => item === i) !== -1 }
       />
     )
   }
@@ -100,6 +108,7 @@ class Game extends React.Component {
     const history = this.state.history
     const current = history[this.state.stepNumber]
     const winner = calculateWinner(current.squares)
+    const winnerSquares = calculateWinner(current.squares) && calculateWinner(current.squares).squares
 
     const moves = history.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start'
@@ -121,7 +130,11 @@ class Game extends React.Component {
     return (
       <div className='game'>
         <div className='game-board'>
-          <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+          <Board
+            squares={current.squares}
+            onClick={i => this.handleClick(i)}
+            winnerSquares={winnerSquares}  
+          />
         </div>
         <div className='game-info'>
           <div>
@@ -155,7 +168,10 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a]
+      return {
+        winner: squares[a],
+        squares: [a, b ,c]
+      }
     }
   }
   return null
