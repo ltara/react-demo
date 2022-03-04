@@ -120,6 +120,10 @@ class Game extends React.Component {
       )
     })
 
+    if (!winner && current.squares.every((item) => item)) {
+      window.alert('draw')
+    }
+
     let status
     if (winner) {
       status = 'Winner: ' + winner
