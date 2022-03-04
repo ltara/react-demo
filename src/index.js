@@ -58,6 +58,7 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
+      order: 'ascending'
     }
   }
 
@@ -78,7 +79,7 @@ class Game extends React.Component {
         },
       ]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
+      xIsNext: !this.state.xIsNext
     })
   }
 
@@ -86,6 +87,12 @@ class Game extends React.Component {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
+    })
+  }
+
+  changeOrder() {
+    this.setState({
+      order: this.state.order === 'ascending' ? 'descending' : 'ascending'
     })
   }
 
@@ -117,8 +124,13 @@ class Game extends React.Component {
           <Board squares={current.squares} onClick={i => this.handleClick(i)} />
         </div>
         <div className='game-info'>
-          <div>{status}</div>
-          <ol>{moves}</ol>
+          <div>
+            {status}
+            <button style={{marginLeft: 10 + 'px'}} onClick={() => this.changeOrder()}>
+              ascending/descending
+            </button>
+          </div>
+          <ol>{ this.state.order === 'ascending' ? moves : moves.reverse() }</ol>
         </div>
       </div>
     )
