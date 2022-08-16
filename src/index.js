@@ -6,7 +6,7 @@ import CommentInput from './CommentInput'
 import CommentList from './CommentList'
 
 
-class Index extends Component {
+class CommentApp extends Component {
   constructor() {
     super()
     this.state = {
@@ -14,9 +14,34 @@ class Index extends Component {
     }
   }
 
+  UNSAFE_componentWillMount() {
+    this._loadComments()
+  }
+
+  _loadComments() {
+    const comments = window.localStorage.getItem('comments')
+    if (comments) {
+      this.setState({ comments: JSON.parse(comments) })
+    }
+  }
+
+  _saveComments(comments) {
+    window.localStorage.setItem('comments', JSON.stringify(comments))
+  }
+
   handleSubmitComment(data) {
+    this.setState((state) => {
+      const newComments = [...state.comments, data]
+      this._saveComments(newComments)
+      return {
+        comments: newComments
+      }
+    })
+  }
+
+  handleRemoveComments(index) {
     this.setState({
-      comments: [...this.state.comments, data]
+      comments: this.state.comments.filter((item, i) => { return (i !== index) })
     })
   }
 
@@ -24,13 +49,13 @@ class Index extends Component {
     return (
       <div className="content">
         <CommentInput onSubmit={ this.handleSubmitComment.bind(this) } />
-        <CommentList comments={ this.state.comments } />
+        <CommentList comments={ this.state.comments } onRemoveComment={this.handleRemoveComments.bind(this)} />
       </div>
     )
   }
 }
 
 ReactDom.render(
-  <Index />,
+  <CommentApp />,
   document.getElementById('root')
 )

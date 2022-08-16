@@ -9,6 +9,24 @@ class CommentInput extends Component {
     }
   }
 
+  componentDidMount() {
+    this._loadUsername()
+  }
+
+  _saveUsername(username) {
+    window.localStorage.setItem('username', username)
+  }
+
+  _loadUsername() {
+    const username = window.localStorage.getItem('username')
+    if (username) {
+      this.setState({ username })
+      this.commentInput.focus()
+    } else {
+      this.usernameInput.focus()
+    }
+  }
+
   handleUsernameChange(e) {
     this.setState({
       username: e.target.value
@@ -20,6 +38,11 @@ class CommentInput extends Component {
       comment: e.target.value
     })
   }
+
+  handleUsernameBlur(e) {
+    this._saveUsername(e.target.value)
+  }
+
   handleSubmit() {
     const { username, comment } = this.state
     if (!username) {
@@ -31,7 +54,7 @@ class CommentInput extends Component {
       return
     }
     if (this.props.onSubmit) {
-      this.props.onSubmit({username, comment})
+      this.props.onSubmit({username, comment, createdTime: Date.now()})
     }
     this.setState({comment: ''})
   }
@@ -44,14 +67,17 @@ class CommentInput extends Component {
           <input
             type="text"
             id="username"
+            ref={(input) => this.usernameInput = input}
             value={this.state.username}
             onChange={ this.handleUsernameChange.bind(this) }
+            onBlur={ this.handleUsernameBlur.bind(this) }
           />
         </div>
         <div className="comment-wrapper">
           <label htmlFor="comment">评论内容：</label>
           <textarea
             id="comment"
+            ref={(input) => this.commentInput = input}
             value={this.state.comment}
             onChange={ this.handleCommentChange.bind(this) }
           />
