@@ -1,54 +1,54 @@
-.content {
+.wrapper {
   width: 400px;
   height: 640px;
   padding: 16px;
   background-color: #eee;
 }
 
-.content .card {
+.wrapper .card {
   padding: 16px;
   background-color: #fff;
 }
 
-.content .card + .card {
+.wrapper .card + .card {
   margin: 16px 0;
 }
 
-.content .form-card {
+.wrapper .form-card {
   height: 160px;
 }
 
-.content .form-card label {
+.wrapper .form-card label {
   display: inline-block;
   width: 80px;
 }
 
-.content .form-card .comment-wrapper {
+.wrapper .form-card .comment-wrapper {
   margin: 16px 0;
 }
 
-.content .form-card #username {
+.wrapper .form-card #username {
   width: calc(100% - 90px)
 }
 
-.content .form-card #comment {
+.wrapper .form-card #comment {
   width: calc(100% - 90px);
   height: 80px;
   vertical-align: text-top;
 }
 
-.content .form-card .btn {
+.wrapper .form-card .btn {
   float: right;
 }
 
-.content .comment-card {
+.wrapper .comment-card {
   min-height: 400px;
 }
 
-.content .comment-card .comment-list-item {
+.wrapper .comment-card .comment-list-item {
   min-height: 80px;
 }
 
-.content .comment-card .comment-list-item .comment-content {
+.wrapper .comment-card .comment-list-item .comment-content {
   min-height: 60px;
 }

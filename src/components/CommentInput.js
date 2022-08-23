@@ -1,30 +1,16 @@
 import React, { Component } from 'react'
 
 class CommentInput extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      username: '',
-      comment: ''
+      username: props.username,
+      content: ''
     }
   }
 
   componentDidMount() {
-    this._loadUsername()
-  }
-
-  _saveUsername(username) {
-    window.localStorage.setItem('username', username)
-  }
-
-  _loadUsername() {
-    const username = window.localStorage.getItem('username')
-    if (username) {
-      this.setState({ username })
-      this.commentInput.focus()
-    } else {
-      this.usernameInput.focus()
-    }
+    this.commentInput.focus()
   }
 
   handleUsernameChange(e) {
@@ -35,28 +21,26 @@ class CommentInput extends Component {
 
   handleCommentChange(e) {
     this.setState({
-      comment: e.target.value
+      content: e.target.value
     })
   }
 
   handleUsernameBlur(e) {
-    this._saveUsername(e.target.value)
+    if (this.props.onUserNameInputBlur) {
+      this.props.onUserNameInputBlur(e.target.value)
+    }
   }
 
   handleSubmit() {
-    const { username, comment } = this.state
-    if (!username) {
-      alert('请输入用户名')
-      return
-    }
-    if (!comment){
-      alert('请输入评论内容')
-      return
-    }
+    const { username, content } = this.state
     if (this.props.onSubmit) {
-      this.props.onSubmit({username, comment, createdTime: Date.now()})
+      this.props.onSubmit({
+        username,
+        content,
+        createdTime: Date.now()
+      })
     }
-    this.setState({comment: ''})
+    this.setState({content: ''})
   }
 
   render() {
@@ -78,7 +62,7 @@ class CommentInput extends Component {
           <textarea
             id="comment"
             ref={(input) => this.commentInput = input}
-            value={this.state.comment}
+            value={this.state.content}
             onChange={ this.handleCommentChange.bind(this) }
           />
         </div>
@@ -89,3 +73,5 @@ class CommentInput extends Component {
 }
 
 export default CommentInput
+
+
